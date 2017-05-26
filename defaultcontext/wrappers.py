@@ -10,13 +10,21 @@ class _DefaultContextMixin(object):
     @classmethod
     def get_default(cls):
         instance = cls._default_stack.get_default()
-        if instance is None and cls._global_default_factory is not None:
-            factory = cls._global_default_factory
+
+        # Lazily construct default instance when first requested
+        if instance is None and not hasattr(cls, "_global_default_instance") \
+                    and cls._global_default_factory is not None:
+            maybe_default_instance = None
             try:
-                instance = factory()
+                maybe_default_instance = cls._global_default_factory()
             except TypeError:
-                # Fix for unbounded method error in Python 2
-                instance = factory.__func__()
+                # Fix for Python 2 unbounded method error
+                maybe_default_instance = cls._global_default_factory.__func__()
+            instance = cls._global_default_instance = maybe_default_instance
+
+        # Case when instance is None, but global default is already built
+        elif instance is None and hasattr(cls, "_global_default_instance"):
+            instance = cls._global_default_instance
 
         return instance
 
@@ -25,8 +33,9 @@ class _DefaultContextMixin(object):
         return cls._default_stack.get_context_manager(instance)
 
     @classmethod
-    def reset_stack(cls):
+    def reset_defaults(cls):
         cls._default_stack.reset()
+        delattr(cls, "_global_default_instance")
 
 
 def optional_arg_class_decorator(fn):
@@ -45,26 +54,26 @@ def optional_arg_class_decorator(fn):
 
 
 @optional_arg_class_decorator
-def with_default_context(cls, use_empty_init=False, factory=None):
+def with_default_context(cls,
+        use_empty_init=False,
+        global_default_factory=None):
     """
     :param use_empty_init: If set to True, object constructed without
-            arguments will be an initial default object of the class.
-    :param factory: Function that constructs an initial global default object
-            on the stack.
+            arguments will be a global default object of the class.
+    :param global_default_factory: Function that constructs a global
+            default object of the class.
 
-    N.B. Either `use_empty_init` should be set to True, or the `factory`
-    should be passed, but not both.
+    N.B. Either `use_empty_init` should be set to True, or the
+    `global_default_factory` should be passed, but not both.
     """
 
     if use_empty_init:
-        if factory is not None:
-            warnings.warn('Either factory or use_empty_init should be set. '
-                          'Assuming use_empty_init=True.')
-        factory = cls
+        if global_default_factory is not None:
+            warnings.warn("Either factory or use_empty_init should be set. "
+                          "Assuming use_empty_init=True.")
+        global_default_factory = lambda: cls()
 
-    default_stack = DefaultStack()
-    class_attrs = dict(
-            _default_stack=default_stack,
-            _global_default_factory=factory)
+    class_attrs = dict(_default_stack=DefaultStack(),
+                       _global_default_factory=global_default_factory)
     return type(cls.__name__, (cls, _DefaultContextMixin), class_attrs)
 

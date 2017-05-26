@@ -20,7 +20,7 @@ def default_name_factory():
     return WithFactory(name='default')
 
 
-@with_default_context(factory=default_name_factory)
+@with_default_context(global_default_factory=default_name_factory)
 class WithFactory(Named):
     pass
 
@@ -52,16 +52,31 @@ def test_object_is_instance_of_global_context(instance):
 
 def test_both_empty_init_and_factory():
     with pytest.warns(UserWarning):
-        with_default_context(factory=Named('default'), use_empty_init=True)(Named)
+        with_default_context(
+                global_default_factory=Named('default'),
+                use_empty_init=True)(Named)
 
 
-def test_no_factory_get_initial_default():
+def test_no_global_default():
     assert NoFactory.get_default() is None
 
 
 @pytest.mark.parametrize('cls', [WithFactory, WithEmptyInit])
-def test_with_factory_get_initial_default(cls):
+def test_global_default(cls):
     assert str(cls.get_default()) == 'default'
+
+
+@pytest.mark.parametrize('cls', [WithFactory, WithEmptyInit])
+def test_global_default_is_singleton(cls):
+    id(cls.get_default()) == id(cls.get_default())
+
+
+@pytest.mark.parametrize('cls', [WithFactory, WithEmptyInit])
+def test_global_default_reset(cls):
+    default1 = cls.get_default()
+    cls.reset_defaults()
+    default2 = cls.get_default()
+    assert id(default1) != id(default2)
 
 
 @pytest.mark.parametrize('cls,default', classes_with_defaults)
