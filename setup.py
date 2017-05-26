@@ -15,7 +15,7 @@ setup(
     version = "1.0.0",
     author = "Bogdan Kulynych",
     author_email = "hello@bogdankulynych.me",
-    description = "Util for creating tensorflow-like default context managers",
+    description = "Tiny util for creating tensorflow-like context managers for default instances of classes",
     url = "https://github.com/bogdan-kulynych/defaultcontext",
     license = "MIT",
     keywords = "utils",

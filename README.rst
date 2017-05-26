@@ -8,7 +8,7 @@ Tiny util for creating tensorflow-like context managers for default instances of
 Installation
 ============
 
-You can install using pip::
+You can install `defaultcontext` using pip::
 
     pip install defaultcontext
 
