@@ -2,8 +2,14 @@
 defaultcontext
 **************
 
-.. image:: https://badge.fury.io/py/defaultcontext.svg
+.. |pypi| image:: https://badge.fury.io/py/defaultcontext.svg
     :target: https://badge.fury.io/py/defaultcontext
+.. |travis| image:: https://travis-ci.org/bogdan-kulynych/defaultcontext.svg?branch=master
+    :target: https://travis-ci.org/bogdan-kulynych/defaultcontext
+
+ +----------+----------+
+ |  |pypi|  | |travis| |
+ +----------+----------+
 
 Tiny util for creating tensorflow-like context managers for default instances of classes.
 
