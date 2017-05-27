@@ -1,5 +1,7 @@
+sudo: false
 language: python
-install:
-    - pip install tox
-script:
-    - tox
+python:
+    - "2.7"
+    - "3.5"
+install: pip install tox-travis
+script: tox
