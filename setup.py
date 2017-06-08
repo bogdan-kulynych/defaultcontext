@@ -12,7 +12,7 @@ with open(path.join(here, 'README.rst'), encoding='utf-8') as f:
 
 setup(
     name = "defaultcontext",
-    version = "1.0.2",
+    version = "1.0.3",
     author = "Bogdan Kulynych",
     author_email = "hello@bogdankulynych.me",
     description = "Tiny util for creating tensorflow-like context managers for default instances of classes",
