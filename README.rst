@@ -7,13 +7,13 @@ defaultcontext
 |    :target: https://badge.fury.io/py/defaultcontext    |    :target: https://travis-ci.org/bogdan-kulynych/defaultcontext                  |
 +--------------------------------------------------------+-----------------------------------------------------------------------------------+
 
-Tiny util for creating tensorflow-like context managers for default instances of classes.
+Tiny util for creating `tensorflow`_-like context managers for default instances of classes.
 
 
 Installation
 ============
 
-You can install `defaultcontext` using pip::
+You can install ``defaultcontext`` using pip::
 
     pip install defaultcontext
 
@@ -21,19 +21,19 @@ You can install `defaultcontext` using pip::
 Usage
 =====
 
-The library provides the `with_default_context` class decorator which simply does two things:
-* Adds static method `Class.get_default()` which returns the default object of the current context block.
-* Adds method `instance.as_default()` to the class, which manages a context within which the `instance`
+The library provides the ``with_default_context`` class decorator which simply does two things:
+- Adds static method ``Class.get_default()`` which returns the default object of the current context block.
+- Adds method ``instance.as_default()`` to the class, which manages a context within which the ``instance``
   becomes default::
 
       instance = Class()
       with instance.as_default():
           assert instance == Class.get_default()
 
-This is useful for creating psuedo-global objects, that can be accessed from any code executed within a
+This is useful for creating psuedo-global objects that can be accessed from any code executed within a
 given context block without passing such objects around.
 
-This idea is inspired by tensorflow's `Graph` and `Session` classes.
+This idea is inspired by ``Graph`` and ``Session`` classes from Google's `tensorflow`_.
 
 Basic usage::
 
@@ -57,8 +57,8 @@ Basic usage::
 
     print(Environment.get_default())          # None
 
-If `with_default_context` was called without parameters the global default value of a class will be `None`.
-The global default can be added using `global_default_factory`::
+If ``with_default_context`` was called without parameters the global default value of a class will be ``None``.
+The global default can be added using ``global_default_factory``::
 
     def make_default_env():
         return Environment(name='default')
@@ -78,8 +78,8 @@ The global default can be added using `global_default_factory`::
 
     Environment.get_default()                      # default
 
-Alternatively, if the class can be constructed without arguments, global default can be set to `Class()` by
-setting `use_empty_init` to `True`::
+Alternatively, if the class can be constructed without arguments, global default can be set to ``Class()`` by
+setting ``use_empty_init`` to ``True``::
 
     @with_default_context(use_empty_init=True)
     class Environment:
@@ -95,4 +95,7 @@ setting `use_empty_init` to `True`::
         print(Environment.get_default())           # custom
 
     Environment.get_default()                      # default
+
+
+.. _tensorflow: https://www.tensorflow.org/
 
