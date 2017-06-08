@@ -21,7 +21,21 @@ You can install `defaultcontext` using pip::
 Usage
 =====
 
-Basic::
+The library provides the `with_default_context` class decorator which simply does two things:
+* Adds static method `Class.get_default()` which returns the default object of the current context block.
+* Adds method `instance.as_default()` to the class, which manages a context within which the `instance`
+  becomes default::
+
+      instance = Class()
+      with instance.as_default():
+          assert instance == Class.get_default()
+
+This is useful for creating psuedo-global objects, that can be accessed from any code executed within a
+given context block without passing such objects around.
+
+This idea is inspired by tensorflow's `Graph` and `Session` classes.
+
+Basic usage::
 
     from defaultcontext import with_default_context
 
