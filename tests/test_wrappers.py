@@ -4,6 +4,7 @@ from defaultcontext.wrappers import with_default_context, _DefaultContextMixin
 
 
 class Named(object):
+    """Test class."""
     def __init__(self, name):
         self.name = name
 
@@ -13,6 +14,7 @@ class Named(object):
 
 @with_default_context
 class NoFactory(Named):
+    """Class with no default factory."""
     pass
 
 
@@ -22,6 +24,7 @@ def default_name_factory():
 
 @with_default_context(global_default_factory=default_name_factory)
 class WithFactory(Named):
+    """Class with default factory."""
     pass
 
 

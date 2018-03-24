@@ -23,7 +23,7 @@ Usage
 
 The library provides the ``with_default_context`` class decorator which simply does two things:
 
-- Adds static method ``Class.get_default()`` which returns the default object of the current context block.
+- Adds static method ``Class.get_default()`` which returns the default object in the current context block.
 - Adds method ``instance.as_default()`` to the class, which manages a context within which the ``instance``
   becomes default
 
@@ -32,7 +32,9 @@ given context block without passing such objects around.
 
 This idea is inspired by ``Graph`` and ``Session`` classes from Google's `tensorflow`_.
 
-Basic usage::
+Basic usage:
+
+.. code-block::  python
 
     from defaultcontext import with_default_context
 
@@ -55,7 +57,9 @@ Basic usage::
     print(Environment.get_default())          # None
 
 If ``with_default_context`` was called without parameters the global default value of a class will be ``None``.
-The global default can be added using ``global_default_factory``::
+The global default can be added using ``global_default_factory``:
+
+.. code-block::  python
 
     def make_default_env():
         return Environment(name='default')
@@ -76,7 +80,9 @@ The global default can be added using ``global_default_factory``::
     Environment.get_default()                      # default
 
 Alternatively, if the class can be constructed without arguments, global default can be set to ``Class()`` by
-setting ``use_empty_init`` to ``True``::
+setting ``use_empty_init`` to ``True``:
+
+.. code-block::  python
 
     @with_default_context(use_empty_init=True)
     class Environment:
