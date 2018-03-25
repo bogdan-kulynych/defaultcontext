@@ -1,3 +1,4 @@
+import functools
 import warnings
 
 from .stack import DefaultStack
@@ -33,6 +34,10 @@ class _DefaultContextMixin(object):
         return cls._default_stack.get_context_manager(instance)
 
     @classmethod
+    def set_global_default(cls, instance):
+        cls._global_default_instance = instance
+
+    @classmethod
     def reset_defaults(cls):
         cls._default_stack.reset()
         delattr(cls, "_global_default_instance")
@@ -43,6 +48,7 @@ def optional_arg_class_decorator(fn):
     Based on:
     https://stackoverflow.com/questions/3888158/python-making-decorators-with-optional-arguments
     """
+    @functools.wraps(fn)
     def wrapped_decorator(*args, **kwargs):
         if len(args) == 1 and isinstance(args[0], type) and not kwargs:
             return fn(args[0])
@@ -75,5 +81,6 @@ def with_default_context(cls,
 
     class_attrs = dict(_default_stack=DefaultStack(),
                        _global_default_factory=global_default_factory)
+    class_attrs.update(cls.__dict__)
     return type(cls.__name__, (cls, _DefaultContextMixin), class_attrs)
 

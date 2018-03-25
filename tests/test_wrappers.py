@@ -30,6 +30,7 @@ class WithFactory(Named):
 
 @with_default_context(use_empty_init=True)
 class WithEmptyInit(Named):
+    """Class with default factory being empty __init__."""
     def __init__(self, name='default'):
         self.name = name
 
@@ -83,6 +84,12 @@ def test_global_default_reset(cls):
 
 
 @pytest.mark.parametrize('cls,default', classes_with_defaults)
+def test_preserves_doc(cls, default):
+    assert cls.__doc__ is not None
+    assert cls.__doc__ == globals()[cls.__name__].__doc__
+
+
+@pytest.mark.parametrize('cls,default', classes_with_defaults)
 def test_as_default(cls, default):
     custom = cls(name='custom')
     assert str(cls.get_default()) == default
@@ -111,6 +118,15 @@ def test_set_default(cls, default):
     with cls.set_default(instance):
         assert str(cls.get_default()) == 'custom'
     assert str(cls.get_default()) == default
+
+
+@pytest.mark.parametrize('cls,default', classes_with_defaults)
+def test_set_global_default(cls, default):
+    instance = cls(name='custom')
+    assert str(cls.get_default()) == default
+    cls.set_global_default(instance)
+    assert str(cls.get_default()) == 'custom'
+    cls.reset_defaults()
 
 
 @pytest.mark.parametrize('cls,default', classes_with_defaults)
