@@ -7,6 +7,8 @@ defaultcontext
 .. image:: https://travis-ci.org/bogdan-kulynych/defaultcontext.svg?branch=master
    :target: https://travis-ci.org/bogdan-kulynych/defaultcontext
 
+
+
 Tiny util for creating `tensorflow`_-like context managers for default instances of classes.
 
 
